@@ -1,0 +1,50 @@
+<view class="container">
+  <view class="header">
+    <text class="title">ESP32 OTA更新</text>
+    <view class="status">
+      <text>状态: {{state}}</text>
+      <text wx:if="{{uploading}}">进度: {{progress}}%</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <block wx:if="{{!connected}}">
+      <view class="device-list">
+        <view class="list-header">
+          <text>可用设备</text>
+          <button size="mini" bindtap="startScan">刷新</button>
+        </view>
+        
+        <view class="list-content">
+          <view class="device-item" 
+                wx:for="{{devices}}" 
+                wx:key="deviceId" 
+                bindtap="connectDevice" 
+                data-device-id="{{item.deviceId}}">
+            <text>{{item.name || 'Unknown Device'}}</text>
+            <text class="rssi">{{item.RSSI}} dBm</text>
+          </view>
+          
+          <view class="empty" wx:if="{{devices.length === 0}}">
+            <text>未找到设备</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="operation">
+        <button type="primary" 
+                bindtap="chooseFile" 
+                disabled="{{uploading}}">
+          选择固件
+        </button>
+        <button type="default" 
+                bindtap="disconnect" 
+                disabled="{{uploading}}">
+          断开连接
+        </button>
+      </view>
+    </block>
+  </view>
+</view>
